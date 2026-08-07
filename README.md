@@ -1,6 +1,6 @@
-#OBJ2H
+# OBJ2H
 
-#How to compile?
+# How to compile?
 
 You can compile this with the command:
 ```bash
@@ -12,7 +12,7 @@ sudo make install
 sudo make uninstall
 ```
 
-#Usage
+# Usage
 
 ```bash
 obj2h /path/to/input.obj /path/to/out.h
