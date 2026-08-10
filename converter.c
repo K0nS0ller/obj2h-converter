@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
+#include <libgen.h>
+#include <string.h>
+
 
 #define MAX_LINE 4096
 #define INITIAL_CAPACITY 1000000
@@ -174,6 +176,14 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    char* input_path = argv[1];
+    char* base = basename(input_path);
+    char* dot = strrchr(base, '.');
+    int name_len = dot ? (dot - base) : strlen(base);
+    char prefix[256];
+    strncpy(prefix, base, name_len);
+    prefix[name_len] = '\0';
+
     char line[MAX_LINE];
     while (fgets(line, sizeof(line), in)) {
         size_t len = strlen(line);
@@ -204,7 +214,7 @@ int main(int argc, char** argv) {
         perror("failed to open output file");
         return 1;
     }
-    fprintf(out, "static const float model_vertices[] = {\n");
+    fprintf(out, "static const float model_%s_vertices[] = {\n", prefix);
     for (int i = 0; i < vert_count; i++) {
         int base = i * 8;
         fprintf(out, "    %.6ff, %.6ff, %.6ff, %.6ff, %.6ff, %.6ff, %.6ff, %.6ff,\n",
@@ -214,20 +224,20 @@ int main(int argc, char** argv) {
     }
     fprintf(out, "};\n\n");
 
-    fprintf(out, "static const unsigned int model_indices[] = {\n");
+    fprintf(out, "static const unsigned int model_%s_indices[] = {\n", prefix);
     for (int i = 0; i < idx_count; i += 3) {
         fprintf(out, "    %u, %u, %u,\n", indices[i], indices[i+1], indices[i+2]);
     }
     fprintf(out, "};\n\n");
 
-    fprintf(out, "#define MODEL_VERTEX_COUNT %d\n", vert_count);
-    fprintf(out, "#define MODEL_INDEX_COUNT %d\n", idx_count);
+    fprintf(out, "#define MODEL_%s_VERTEX_COUNT %d\n",prefix, vert_count);
+    fprintf(out, "#define MODEL_%s_INDEX_COUNT %d\n", prefix, idx_count);
 
     fclose(out);
 
     free(positions); free(texcoords); free(normals);
     free(vertices); free(indices);
 
-    printf("Conversion complete: %s\n", argv[2]);
+    printf("convertion complete: %s\n", argv[2]);
     return 0;
 }
