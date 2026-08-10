@@ -214,6 +214,7 @@ int main(int argc, char** argv) {
         perror("failed to open output file");
         return 1;
     }
+    fprintf(out, "#pragma once\n");
     fprintf(out, "static const float model_%s_vertices[] = {\n", prefix);
     for (int i = 0; i < vert_count; i++) {
         int base = i * 8;
