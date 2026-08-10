@@ -1,5 +1,5 @@
 converter:
-	gcc converter.c -o obj2h -lm
+	gcc converter.c -o obj2h
 
 clean:
 	rm obj2h
